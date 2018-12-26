@@ -1,0 +1,62 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'This template creates ec2 Instances which t2.micro and attaching volume 8gb '
+Parameters:
+  KeyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: DEMO-KEY
+    Description: must be the name of an existing EC2 KeyPair.
+  
+  InstanceType:
+    Description:  Specify EC2 instance type
+    Type: String
+    Default: t2.micro
+  
+  ImageID:
+    Description: Specify Image ID
+    Type: String
+    Default: ami-0d773a3b7bb2bb1c1
+
+  SubnetID:
+    Description: Specify Subnet ID
+    Type: String
+    Default: subnet-e22d90ae
+
+  HostName:
+    Description: Specify the host name to identify the instance
+    Type: String
+  
+Resources:
+
+  InstanceSecurityGroup:
+      Type: AWS::EC2::SecurityGroup
+      Properties:
+        GroupDescription: Enable SSH access via port 22
+        SecurityGroupIngress:
+          - IpProtocol: tcp
+            FromPort: '22'
+            ToPort: '22'
+            CidrIp: 0.0.0.0/0
+
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds: 
+        - !GetAtt InstanceSecurityGroup.GroupId
+      KeyName: !Ref KeyName
+      ImageId: !Ref ImageID
+      SubnetId: !Ref SubnetID
+      UserData:
+        "Fn::Base64": !Sub |
+          #!/bin/bash
+          sudo hostname ${HostName}
+          echo ${HostName} > /etc/hostname
+
+Outputs:
+  InstanceId:
+    Description: InstanceId of the newly created EC2 instance
+    Value:
+      Ref: EC2Instance
+  

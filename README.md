@@ -19,6 +19,6 @@ install.sh: In this file we declared all the tools those we want to install in t
             I am installed NVM-0.33.2, Node-8.12.0, Docker-18.9, Docker Compose-1.13, Openssl-latest version, Git-latest version in both               the servers by provisioning each other
 clean.sh: This is the file used to clean all the things in servers before deploying our tools. For this purpose i have written some code               in this file
 Deploy.sh:This is the final step of our project once we execute this code all the things will deploy to respective provisioned server.
-This is all about the explination of my code.
+            This is all about the explination of my code.
 
            
